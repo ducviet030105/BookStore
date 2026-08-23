@@ -4,27 +4,36 @@ import Book from "../models/Book.js";
 export const createBook = async (req, res) => {
   try {
     const { title, caption, rating, image } = req.body;
+
     if (!title || !caption || !rating || !image) {
       return res.status(400).json({
-        message: "Plase provide all feilds"
-      })
+        message: "Please provide all fields",
+      });
     }
-    const uploadReponse = await cloudinary.uploader.upload(image);
-    const imageUrl = uploadReponse.secure_url;
+
+    const uploadResponse = await cloudinary.uploader.upload(image);
+
+    const imageUrl = uploadResponse.secure_url;
+
     const newBook = new Book({
       title,
       caption,
       rating,
       image: imageUrl,
-      user: req.user._id
-    })
-    await newBook.save()
-    return res.status(200).json(newBook)
+      user: req.user._id,
+    });
+
+    await newBook.save();
+
+    return res.status(201).json(newBook);
   } catch (error) {
-    console.log("Error in register route", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error in createBook:", error);
+
+    return res.status(500).json({
+      message: "Internal server error",
+    });
   }
-}
+};
 export const getAllBook = async (req, res) => {
   try {
     const page = req.query.page || 1;
