@@ -82,10 +82,18 @@ export const deleteBook = async (req, res) => {
 }
 export const getUserBook = async (req, res) => {
   try {
-    const book = (await Book.find({ user: req.user._id })).sort({ createdAt: -1 });
-    return res.status(200).json(book);
+
+    const books = await Book.find({
+      user: req.user._id,
+    }).sort({
+      createdAt: -1,
+    });
+    return res.status(200).json(books);
   } catch (error) {
-    console.log("Error in register route", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("GET USER BOOK ERROR:", error);
+
+    return res.status(500).json({
+      message: error.message,
+    });
   }
-}
+};

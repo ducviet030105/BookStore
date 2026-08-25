@@ -12,7 +12,6 @@ const PORT = process.env.PORT || 3000;
 
 job.start();
 
-// Cors nên đặt trước route
 app.use(cors());
 
 app.use(express.json({ limit: "10mb" }));
